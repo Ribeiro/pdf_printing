@@ -34,14 +34,6 @@ public class TemplateService {
     public ByteArrayInputStream getParsedTemplate(String name, PdfRequestDto pdfRequestDto) throws IOException {
         Template template = findByName(name);
 
-        VelocityContext context = new VelocityContext();
-        context.put("strings", pdfRequestDto.getStrings());
-
-        StringWriter writer = new StringWriter();
-        velocityEngine.evaluate(context, writer, "Template", template.getContent());
-
-        String htmlContent = writer.toString();
-
         PDDocument pdfDocument = new PDDocument();
         PDPage page = new PDPage();
         pdfDocument.addPage(page);
@@ -50,7 +42,7 @@ public class TemplateService {
         contentStream.setFont(PDType1Font.HELVETICA, 12);
         contentStream.beginText();
         contentStream.newLineAtOffset(25, 700);
-        contentStream.showText(htmlContent);
+        contentStream.showText(getHtmlContent(template, pdfRequestDto));
         contentStream.endText();
         contentStream.close();
 
@@ -67,4 +59,15 @@ public class TemplateService {
         template.setContent("<html><body><h1>PDF Generation</h1><ul>#foreach($string in $strings)<li>$string</li>#end</ul></body></html>");
         return template;
     }
+
+    private String getHtmlContent(Template template, PdfRequestDto pdfRequestDto){
+        VelocityContext context = new VelocityContext();
+        context.put("strings", pdfRequestDto.getStrings());
+
+        StringWriter writer = new StringWriter();
+        velocityEngine.evaluate(context, writer, "Template", template.getContent());
+
+        return writer.toString();
+    }
+    
 }
