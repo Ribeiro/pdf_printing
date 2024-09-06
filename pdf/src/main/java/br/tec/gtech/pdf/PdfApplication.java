@@ -1,6 +1,10 @@
 package br.tec.gtech.pdf;
 
+import java.util.Properties;
+
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.StringResourceLoader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +19,10 @@ public class PdfApplication {
 	@Bean
     public VelocityEngine velocityEngine() {
         VelocityEngine velocityEngine = new VelocityEngine();
-        velocityEngine.setProperty("resource.loaders", "class");
-        velocityEngine.setProperty("resource.loader.class.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        Properties props = new Properties();
+        props.setProperty(RuntimeConstants.RESOURCE_LOADERS, "string");
+        props.setProperty("resource.loader.string.class", StringResourceLoader.class.getName());
+        velocityEngine.init(props);
         return velocityEngine;
     }
 
