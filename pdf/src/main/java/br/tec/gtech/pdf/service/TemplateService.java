@@ -66,7 +66,6 @@ public class TemplateService {
             builder.withHtmlContent(htmlContent, null);
             builder.toStream(baos);
             builder.run();
-
             return new ByteArrayInputStream(baos.toByteArray());
         }
     }
