@@ -36,7 +36,9 @@ public class TemplateService {
     }
 
     public ByteArrayInputStream getParsedTemplate(String name, PdfRequestDto pdfRequestDto) throws Exception {
-        String content = processTemplate(name, templateRepository.getDefaultTemplate(), pdfRequestDto.getDataMap());
+        // Recupera o template do cache ou do repositório se não estiver no cache
+        String templateContent = templateCache.computeIfAbsent(name, key -> templateRepository.getDefaultTemplate());
+        String content = processTemplate(name, templateContent, pdfRequestDto.getDataMap());
         return generatePdfFromHtml(content);
     }
 
