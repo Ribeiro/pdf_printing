@@ -36,21 +36,20 @@ public class TemplateService {
     }
 
     public ByteArrayInputStream getParsedTemplate(String name, PdfRequestDto pdfRequestDto) throws Exception {
-        // Recupera o template do cache ou do repositório se não estiver no cache
-        String templateContent = templateCache.computeIfAbsent(name, key -> templateRepository.getDefaultTemplate());
-        String content = processTemplate(name, templateContent, pdfRequestDto.getDataMap());
+        String content = processTemplate(name, pdfRequestDto.getDataMap());
         return generatePdfFromHtml(content);
     }
 
-    private void addTemplateToRepository(String templateName, String templateContent) {
+    private void addTemplateToRepository(String templateName) {
         templateCache.computeIfAbsent(templateName, key -> {
+            String templateContent = templateRepository.getDefaultTemplate();
             StringResourceLoader.getRepository().putStringResource(templateName, templateContent);
             return templateContent;
         });
     }
 
-    private String processTemplate(String templateName, String templateContent, Map<String, Object> data) {
-        addTemplateToRepository(templateName, templateContent);
+    private String processTemplate(String templateName, Map<String, Object> data) {
+        addTemplateToRepository(templateName);
         VelocityContext context = new VelocityContext(data);
         Template template = velocityEngine.getTemplate(templateName);
 
@@ -68,6 +67,7 @@ public class TemplateService {
             builder.withHtmlContent(htmlContent, null);
             builder.toStream(baos);
             builder.run();
+
             return new ByteArrayInputStream(baos.toByteArray());
         }
     }
