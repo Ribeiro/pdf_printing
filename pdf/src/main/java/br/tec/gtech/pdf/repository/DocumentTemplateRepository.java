@@ -1,13 +1,12 @@
 package br.tec.gtech.pdf.repository;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 import org.springframework.stereotype.Repository;
 import br.tec.gtech.pdf.model.DocumentTemplate;
 
 @Repository
-public class TemplateRepository {
+public class DocumentTemplateRepository {
 
     private static final String TEMPLATE_CONTENT = "<!DOCTYPE html>\n" +
             "<html>\n" +

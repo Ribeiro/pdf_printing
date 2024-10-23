@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import br.tec.gtech.pdf.dto.PdfRequestDto;
-import br.tec.gtech.pdf.service.TemplateService;
+import br.tec.gtech.pdf.service.DocumentTemplateService;
 
 @Controller
 @RequestMapping("/pdf")
@@ -18,9 +18,9 @@ public class PdfController {
 
     private static final String INLINE_FILENAME_OUTPUT_PDF = "inline; filename=output.pdf";
     private static final String CONTENT_DISPOSITION = "Content-Disposition";
-    private final TemplateService templateService;
+    private final DocumentTemplateService templateService;
 
-    public PdfController(TemplateService templateService) {
+    public PdfController(DocumentTemplateService templateService) {
         this.templateService = templateService;    
     }
 
