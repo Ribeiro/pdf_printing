@@ -16,6 +16,8 @@ import br.tec.gtech.pdf.service.TemplateService;
 @RequestMapping("/pdf")
 public class PdfController {
 
+    private static final String INLINE_FILENAME_OUTPUT_PDF = "inline; filename=output.pdf";
+    private static final String CONTENT_DISPOSITION = "Content-Disposition";
     private final TemplateService templateService;
 
     public PdfController(TemplateService templateService) {
@@ -24,7 +26,7 @@ public class PdfController {
 
     @PostMapping(value = "/generate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<InputStreamResource> generatePdf(@RequestBody PdfRequestDto pdfRequestDto) throws Exception {
-        ByteArrayInputStream byteArrayInputStream = templateService.getParsedTemplate("defaultTemplate", pdfRequestDto);
+        ByteArrayInputStream byteArrayInputStream = templateService.generatePdf(pdfRequestDto);
         return ResponseEntity
                 .ok()
                 .headers(getHttpHeadersForInlineFile())
@@ -34,7 +36,7 @@ public class PdfController {
 
     private HttpHeaders getHttpHeadersForInlineFile(){
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename=output.pdf");
+        headers.add(CONTENT_DISPOSITION, INLINE_FILENAME_OUTPUT_PDF);
         return headers;
     }
 }
